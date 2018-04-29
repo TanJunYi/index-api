@@ -42,7 +42,7 @@ public class WebAPIs {
     private static final String SERVICE_DOWNLOAD_BIN = "/operation/download_bin";
     private static final String SERVICE_ONLINE_DECODE = "/operation/decode";
 
-    private int adminId;
+    private int id;
     private String token;
 
     private OkHttpClient mHttpClient;
@@ -106,11 +106,11 @@ public class WebAPIs {
             String response = postToServer(signInURL, bodyJson);
             LoginResponse loginResponse = new Gson().fromJson(response, LoginResponse.class);
             if(loginResponse.getStatus().getCode() == Constants.ERROR_CODE_SUCCESS) {
-                UserApp admin = loginResponse.getEntity();
-                if (0 != admin.getId() && null != admin.getToken()) {
-                    adminId = admin.getId();
-                    token = admin.getToken();
-                    signInCallback.onSignInSuccess(admin);
+                UserApp userApp = loginResponse.getEntity();
+                if (0 != userApp.getId() && null != userApp.getToken()) {
+                    id = userApp.getId();
+                    token = userApp.getToken();
+                    signInCallback.onSignInSuccess(userApp);
                 } else {
                     signInCallback.onSignInFailed();
                 }
@@ -125,7 +125,7 @@ public class WebAPIs {
     public void listCategories(int from, int count, ListCategoriesCallback listCategoriesCallback) {
         String listCategoriesURL = URL_PREFIX + SERVICE_LIST_CATEGORIES;
         ListCategoriesRequest listCategoriesRequest = new ListCategoriesRequest();
-        listCategoriesRequest.setAdminId(adminId);
+        listCategoriesRequest.setId(id);
         listCategoriesRequest.setToken(token);
         listCategoriesRequest.setFrom(from);
         listCategoriesRequest.setCount(count);
@@ -151,7 +151,7 @@ public class WebAPIs {
                            ListBrandsCallback listBrandsCallback) {
         String listBrandsURL = URL_PREFIX + SERVICE_LIST_BRANDS;
         ListBrandsRequest listBrandsRequest = new ListBrandsRequest();
-        listBrandsRequest.setAdminId(adminId);
+        listBrandsRequest.setId(id);
         listBrandsRequest.setToken(token);
         listBrandsRequest.setCategoryId(categoryId);
         listBrandsRequest.setFrom(from);
@@ -177,7 +177,7 @@ public class WebAPIs {
     public void listProvinces(ListProvincesCallback listProvincesCallback) {
         String listProvincesURL = URL_PREFIX + SERVICE_LIST_PROVINCES;
         ListCitiesRequest listCitiesRequest = new ListCitiesRequest();
-        listCitiesRequest.setAdminId(adminId);
+        listCitiesRequest.setId(id);
         listCitiesRequest.setToken(token);
         String bodyJson = listCitiesRequest.toJson();
 
@@ -200,7 +200,7 @@ public class WebAPIs {
     public void listCities(String prefix, ListCitiesCallback listCitiesCallback) {
         String listCitiesURL = URL_PREFIX + SERVICE_LIST_CITIES;
         ListCitiesRequest listCitiesRequest = new ListCitiesRequest();
-        listCitiesRequest.setAdminId(adminId);
+        listCitiesRequest.setId(id);
         listCitiesRequest.setToken(token);
         listCitiesRequest.setProvincePrefix(prefix);
         String bodyJson = listCitiesRequest.toJson();
@@ -225,7 +225,7 @@ public class WebAPIs {
                               ListOperatersCallback listOperatersCallback) {
         String listOperatorsURL = URL_PREFIX + SERVICE_LIST_OPERATORS;
         ListOperatorsRequest listOperatorsRequest = new ListOperatorsRequest();
-        listOperatorsRequest.setAdminId(adminId);
+        listOperatorsRequest.setId(id);
         listOperatorsRequest.setToken(token);
         listOperatorsRequest.setCityCode(cityCode);
         listOperatorsRequest.setFrom(0);
@@ -255,7 +255,7 @@ public class WebAPIs {
                                   ListIndexesCallback onListIndexCallback) {
         String listIndexesURL = URL_PREFIX + SERVICE_LIST_INDEXES;
         ListIndexesRequest listIndexesRequest = new ListIndexesRequest();
-        listIndexesRequest.setAdminId(adminId);
+        listIndexesRequest.setId(id);
         listIndexesRequest.setToken(token);
         listIndexesRequest.setCategoryId(categoryId);
         listIndexesRequest.setBrandId(brandId);
@@ -286,7 +286,7 @@ public class WebAPIs {
                             DownloadBinCallback downloadBinCallback) {
         String downloadURL = URL_PREFIX + SERVICE_DOWNLOAD_BIN;
         DownloadBinaryRequest downloadBinaryRequest = new DownloadBinaryRequest();
-        downloadBinaryRequest.setAdminId(adminId);
+        downloadBinaryRequest.setId(id);
         downloadBinaryRequest.setToken(token);
         downloadBinaryRequest.setIndexId(indexId);
 
@@ -313,7 +313,7 @@ public class WebAPIs {
     public int[] decodeIR(int indexId) {
         String decodeURL = URL_PREFIX + SERVICE_ONLINE_DECODE;
         DecodeRequest decodeRequest = new DecodeRequest();
-        decodeRequest.setAdminId(adminId);
+        decodeRequest.setId(id);
         decodeRequest.setToken(token);
         decodeRequest.setIndexId(indexId);
 
